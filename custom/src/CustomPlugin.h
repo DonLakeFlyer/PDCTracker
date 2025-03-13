@@ -58,6 +58,9 @@ public:
     Q_PROPERTY(double               maxSNR                  MEMBER  _maxSNR                     NOTIFY maxSNRChanged)
     Q_PROPERTY(double               minSNR                  MEMBER  _minSNR                     NOTIFY minSNRChanged)
 
+    // This custom version of the normal showAdvancedUI bool is used to help mark code changes in upstream QGC
+    Q_PROPERTY(bool                 customShowAdvancedUI    MEMBER  _showAdvancedUI             NOTIFY customShowAdvancedUIChanged)
+
     CustomSettings*     customSettings  () { return _customSettings; }
     DetectorList *      detectorList() { return DetectorList::instance(); }
     QString             holdFlightMode();
@@ -104,6 +107,7 @@ signals:
     void _startDetectionFailed          (void);
     void _detectionStopped              (void);
     void _stopDetectionFailed           (void);
+    void customShowAdvancedUIChanged    (bool showAdvancedUI);
 
 private slots:
     void _controllerHeartbeatFailed(void);

@@ -61,10 +61,13 @@ CustomPlugin::CustomPlugin(QObject* parent)
 
     qmlRegisterUncreatableType<CustomPlugin>("QGroundControl", 1, 0, "CustomPlugin", "Reference only");
 
+    _showAdvancedUI = false;
+
     _controllerHeartbeatTimer.setSingleShot(true);
     _controllerHeartbeatTimer.setInterval(6000);    // We should get heartbeats every 5 seconds
 
     connect(&_controllerHeartbeatTimer, &QTimer::timeout, this, &CustomPlugin::_controllerHeartbeatFailed);
+    connect(this, &QGCCorePlugin::showAdvancedUIChanged, this, &CustomPlugin::customShowAdvancedUIChanged);
 }
 
 CustomPlugin::~CustomPlugin()

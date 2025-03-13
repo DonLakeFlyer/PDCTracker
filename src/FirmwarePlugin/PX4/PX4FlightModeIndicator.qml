@@ -55,6 +55,7 @@ FlightModeIndicator {
             SettingsGroupLayout {
                 Layout.fillWidth:   true
                 heading:            qsTr("GeoFence")
+                visible:            QGroundControl.corePlugin.customShowAdvancedUI
 
                 LabelledFactComboBox {
                     Layout.fillWidth:       true

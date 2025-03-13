@@ -200,7 +200,8 @@ RowLayout {
             }
 
             SettingsGroupLayout {
-                Layout.fillWidth:  true
+                Layout.fillWidth:   true
+                visible:            QGroundControl.corePlugin.customShowAdvancedUI
 
                 RowLayout {
                     Layout.fillWidth:   true
