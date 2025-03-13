@@ -321,6 +321,7 @@ ApplicationWindow {
                             Layout.fillWidth:   true
                             text:               qsTr("Plan Flight")
                             imageResource:      "/qmlimages/Plan.svg"
+                            visible:            QGroundControl.corePlugin.customShowAdvancedUI
                             onClicked: {
                                 if (mainWindow.allowViewSwitch()) {
                                     mainWindow.closeIndicatorDrawer()
@@ -350,6 +351,7 @@ ApplicationWindow {
                             Layout.fillWidth:   true
                             text:               qsTr("Vehicle Configuration")
                             imageResource:      "/qmlimages/Gears.svg"
+                            visible:            QGroundControl.corePlugin.customShowAdvancedUI
                             onClicked: {
                                 if (mainWindow.allowViewSwitch()) {
                                     mainWindow.closeIndicatorDrawer()
