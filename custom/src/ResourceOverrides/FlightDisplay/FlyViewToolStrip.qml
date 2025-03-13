@@ -67,5 +67,5 @@ ToolStrip {
         ]
     }
 
-    model: QGroundControl.corePlugin.customSettings.autoTakeoffRotateRTL.rawValue ? autoActionList.model : fullActionList.model
+    model: QGroundControl.corePlugin.customShowAdvancedUI ? fullActionList.model : autoActionList.model
 }

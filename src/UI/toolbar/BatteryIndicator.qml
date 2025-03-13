@@ -396,6 +396,7 @@ Item {
             Loader {
                 Layout.fillWidth: true
                 sourceComponent: expandedPageComponent
+                visible: QGroundControl.corePlugin.customShowAdvancedUI
             }
 
             SettingsGroupLayout {
