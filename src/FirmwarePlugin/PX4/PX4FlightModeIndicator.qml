@@ -50,20 +50,12 @@ FlightModeIndicator {
                     to:                     fact.maxIsDefaultForType ? QGroundControl.unitsConversion.metersToAppSettingsVerticalDistanceUnits(121.92) : fact.max
                     majorTickStepSize:      10
                 }
-
-                FactSlider {
-                    Layout.fillWidth:       true
-                    label:                  qsTr("Land Descent Rate")
-                    fact:                   mpcLandSpeedFact
-                    to:                     fact.maxIsDefaultForType ? QGroundControl.unitsConversion.metersToAppSettingsVerticalDistanceUnits(4) : fact.max
-                    majorTickStepSize:      0.5
-                    visible:                mpcLandSpeedFact && controller.vehicle && !controller.vehicle.fixedWing
-                }
             }
 
             SettingsGroupLayout {
                 Layout.fillWidth:   true
                 heading:            qsTr("GeoFence")
+                visible:            QGroundControl.corePlugin.customShowAdvancedUI
 
                 LabelledFactComboBox {
                     Layout.fillWidth:       true

@@ -200,7 +200,8 @@ RowLayout {
             }
 
             SettingsGroupLayout {
-                Layout.fillWidth:  true
+                Layout.fillWidth:   true
+                visible:            QGroundControl.corePlugin.customShowAdvancedUI
 
                 RowLayout {
                     Layout.fillWidth:   true
@@ -220,7 +221,8 @@ RowLayout {
                     Layout.fillWidth:   true
                     label:              qsTr("Flight Modes")
                     buttonText:         qsTr("Configure")
-                    visible:            _activeVehicle.autopilotPlugin.knownVehicleComponentAvailable(AutoPilotPlugin.KnownFlightModesVehicleComponent)
+                    visible:            _activeVehicle.autopilotPlugin.knownVehicleComponentAvailable(AutoPilotPlugin.KnownFlightModesVehicleComponent) &&
+                                            QGroundControl.corePlugin.showAdvancedUI
 
                     onClicked: {
                         mainWindow.showKnownVehicleComponentConfigPage(AutoPilotPlugin.KnownFlightModesVehicleComponent)
