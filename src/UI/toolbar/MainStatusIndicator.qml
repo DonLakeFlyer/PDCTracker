@@ -172,7 +172,7 @@ RowLayout {
         id: overallStatusIndicatorPage
 
         ToolIndicatorPage {
-            showExpand:         _activeVehicle.mainStatusIndicatorContentItem ? true : false
+            showExpand:         QGroundControl.corePlugin.customShowAdcancedUI && _activeVehicle.mainStatusIndicatorContentItem ? true : false
             waitForParameters:  _activeVehicle.mainStatusIndicatorContentItem ? true : false
             contentComponent:   mainStatusContentComponent
             expandedComponent:  mainStatusExpandedComponent

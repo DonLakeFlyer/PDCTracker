@@ -189,7 +189,9 @@ Map {
                 dragActive = false
                 mapPanStop()
             } else {
-                mapClicked(Qt.point(touchPoints[0].x, touchPoints[0].y))
+                if (QGroundControl.corePlugin.customShowAdvancedUI) {
+                    mapClicked(Qt.point(touchPoints[0].x, touchPoints[0].y))
+                }
             }
         }
     }
