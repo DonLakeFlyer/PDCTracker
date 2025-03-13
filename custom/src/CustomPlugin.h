@@ -95,6 +95,8 @@ public:
     bool                adjustSettingMetaData   (const QString& settingsGroup, FactMetaData& metaData) final;
     QmlObjectListModel* customMapItems          (void) final;
     const QVariantList& toolBarIndicators       (void) final;
+    QString             brandImageIndoor        () const final;
+    QString             brandImageOutdoor       () const final;
 
 signals:
     void angleRatiosChanged             (void);
