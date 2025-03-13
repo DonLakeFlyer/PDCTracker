@@ -463,3 +463,13 @@ void CustomPlugin::_stopDetectionOnDisarmed(bool armed)
         stopDetection();
     }
 }
+
+QString CustomPlugin::brandImageIndoor(void) const
+{
+    return QStringLiteral("/res/pdc-logo.png");
+}
+
+QString CustomPlugin::brandImageOutdoor(void) const
+{
+    return QStringLiteral("/res/pdc-logo.png");
+}
