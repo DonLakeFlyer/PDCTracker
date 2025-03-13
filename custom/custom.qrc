@@ -19,6 +19,7 @@
     </qresource>
     <qresource prefix="/res">
         <file alias="TagInfo.txt">TagInfo.txt</file>
+        <file alias="pdc-logo.png">resources/pdc-logo.png</file>
     </qresource>
     <qresource prefix="/json">
         <file alias="Custom.SettingsGroup.json">src/Custom.SettingsGroup.json</file>
