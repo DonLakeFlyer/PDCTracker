@@ -31,7 +31,10 @@ RowLayout {
 
     function dropMainStatusIndicator() {
         let overallStatusComponent = _activeVehicle ? overallStatusIndicatorPage : overallStatusOfflineIndicatorPage
-        mainWindow.showIndicatorDrawer(overallStatusComponent, control)
+        if (_activeVehicle || QGroundControl.corePlugin.customShowAdvancedUI) {
+            // Only show the indicator drawer if we have a vehicle or we are in advanced UI mode
+            mainWindow.closeIndicatorDrawer()
+        }
     }
 
     QGCLabel {
@@ -42,7 +45,9 @@ RowLayout {
         property string _commLostText:      qsTr("Comms Lost")
         property string _readyToFlyText:    qsTr("Ready To Fly")
         property string _notReadyToFlyText: qsTr("Not Ready")
-        property string _disconnectedText:  qsTr("Disconnected - Click to manually connect")
+        property string _disconnectedText:  QGroundControl.corePlugin.customShowAdvancedUI ?
+                                                qsTr("Disconnected - Click to manually connect") :
+                                                qsTr("Disconnected")
         property string _armedText:         qsTr("Armed")
         property string _flyingText:        qsTr("Flying")
         property string _landingText:       qsTr("Landing")
