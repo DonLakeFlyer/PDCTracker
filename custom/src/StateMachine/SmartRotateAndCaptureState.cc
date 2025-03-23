@@ -139,7 +139,6 @@ SmartRotateAndCaptureState::SmartRotateAndCaptureState(QState* parentState)
                                     true,                       // clockwiseDirection
                                     4);                         // sliceCount
     auto determineSearchTypeState = new DetermineSearchTypeState(this, _rotationDivisions);
-    auto finalState = new QFinalState(this);
 
     // Transitions
     _rotationBeginState->addTransition(_rotationBeginState, &FunctionState::functionCompleted, _sliceSequenceState);
