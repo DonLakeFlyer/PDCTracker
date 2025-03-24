@@ -33,7 +33,7 @@ RowLayout {
         let overallStatusComponent = _activeVehicle ? overallStatusIndicatorPage : overallStatusOfflineIndicatorPage
         if (_activeVehicle || QGroundControl.corePlugin.customShowAdvancedUI) {
             // Only show the indicator drawer if we have a vehicle or we are in advanced UI mode
-            mainWindow.closeIndicatorDrawer()
+            mainWindow.showIndicatorDrawer(overallStatusComponent, control)
         }
     }
 
