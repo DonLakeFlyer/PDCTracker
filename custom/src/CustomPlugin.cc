@@ -577,3 +577,20 @@ QString CustomPlugin::brandImageOutdoor(void) const
 {
     return QStringLiteral("/res/pdc-logo.png");
 }
+
+bool CustomPlugin::_validateAtLeastOneTagSelected()
+{
+    auto tagDatabase = TagDatabase::instance();
+    auto tagInfoListModel = tagDatabase->tagInfoListModel();
+
+    for (int i=0; i<tagInfoListModel->count(); i++) {
+        TagInfo* tagInfo = tagInfoListModel->value<TagInfo*>(i);
+        if (tagInfo->selected()->rawValue().toUInt()) {
+            return true;
+        }
+    }
+
+    qgcApp()->showAppMessage(tr("At least one tag must be selected"));
+
+    return false;
+}

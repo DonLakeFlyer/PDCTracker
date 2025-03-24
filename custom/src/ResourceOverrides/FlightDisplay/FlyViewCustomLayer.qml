@@ -72,6 +72,7 @@ Item {
         anchors.right:      parent.right
         height:             parent.height - (anchors.margins * 2) - parentToolInsets.bottomEdgeRightInset
         spacing:            ScreenTools.defaultFontPixelHeight / 4
+        visible:            _customSettings.showPulseOnMap.rawValue
 
         QGCButton {
             Layout.alignment:   Qt.AlignHCenter
