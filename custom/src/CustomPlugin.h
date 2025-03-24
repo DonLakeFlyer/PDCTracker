@@ -117,6 +117,7 @@ signals:
 private slots:
     void _controllerHeartbeatFailed(void);
     void _stopDetectionOnDisarmed(bool armed);
+    bool _validateAtLeastOneTagSelected();
 
 private:
     typedef enum {
@@ -178,7 +179,7 @@ private:
     TunnelProtocol::PulseInfo_t _lastPulseInfo;
     QVariantList            _toolbarIndicators;
 
-    bool                    _controllerLostHeartbeat { true };
+    bool                    _controllerLostHeartbeat { false };
     QTimer                  _controllerHeartbeatTimer;
 
     int                     _curLogFileDownloadIndex;
