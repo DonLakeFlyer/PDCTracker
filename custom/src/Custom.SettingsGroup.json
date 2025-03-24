@@ -35,7 +35,9 @@
     "name":         "divisions",
     "shortDesc":    "Rotation Divisions",
     "type":         "Int32",
-    "default":      16
+    "enumStrings":  "8,16",
+    "enumValues":   "8,16",
+    "default":      8
 },
 {
     "name":         "gain",
@@ -90,6 +92,16 @@
     "shortDesc":    "Allow Multi Tag Detection",
     "type":         "bool",
     "default":      false
+},
+{
+    "name":         "rotationType",
+    "shortDesc":    "Rotation Type",
+    "type":         "uint32",
+    "default":      1,
+    "enumStrings":  "Full,Fast",
+    "enumValues":   "1,2",
+    "min":          1,
+    "max":          2
 },
 {
     "name":             "antennaType",

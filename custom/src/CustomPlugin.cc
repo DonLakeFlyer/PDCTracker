@@ -5,13 +5,15 @@
 #include "SendTagsState.h"
 #include "CustomStateMachine.h"
 #include "SendTunnelCommandState.h"
-#include "RotateAndCaptureState.h"
+#include "FullRotateAndCaptureState.h"
+#include "SmartRotateAndCaptureState.h"
 #include "TakeoffState.h"
 #include "SetFlightModeState.h"
 #include "StartDetectionState.h"
 #include "StopDetectionState.h"
 #include "FunctionState.h"
 #include "SayState.h"
+#include "RotateMavlinkCommandState.h"
 
 #include "Vehicle.h"
 #include "QGCApplication.h"
@@ -193,6 +195,8 @@ void CustomPlugin::_handleTunnelPulse(Vehicle* vehicle, const mavlink_tunnel_t& 
                                         pulseInfo.tag_id <<
                                         "snr" <<
                                         pulseInfo.snr <<
+                                        "heading" <<
+                                        pulseInfo.orientation_z <<
                                         "stft_score" <<
                                         pulseInfo.stft_score <<
                                         "group_seq_counter" <<
@@ -201,6 +205,7 @@ void CustomPlugin::_handleTunnelPulse(Vehicle* vehicle, const mavlink_tunnel_t& 
                                         pulseInfo.start_time_seconds;
 
             _csvLogManager.csvLogPulse(pulseInfo);
+            _updateSliceInfo(pulseInfo);
 
             if (qIsNaN(_minSNR) || pulseInfo.snr < _minSNR) {
                 _minSNR = pulseInfo.snr;
@@ -241,6 +246,58 @@ void CustomPlugin::_handleTunnelPulse(Vehicle* vehicle, const mavlink_tunnel_t& 
 
 }
 
+void CustomPlugin::_updateSliceInfo(const PulseInfo_t& pulseInfo)
+{
+    if (!_activeRotation) {
+        return;
+    }
+    if (_rgAngleStrengths.isEmpty()) {
+        qWarning() << "No angle strengths list" << " - " << Q_FUNC_INFO;
+        return;
+    }
+
+    // Determine which slice this pulse applies to
+    double degreesPerSlice = 360.0 / rgAngleStrengths().last().count();
+    double heading = pulseInfo.orientation_z;
+    double adjustedHeading = heading + degreesPerSlice / 2;
+    adjustedHeading = fmod(adjustedHeading + 360.0, 360.0);
+    int sliceIndex = static_cast<int>(adjustedHeading / degreesPerSlice);
+
+    qCDebug(CustomPluginLog) << "heading" << heading << "adjustedHeading" << adjustedHeading << "sliceIndex" << sliceIndex << "snr" << pulseInfo.snr << " - " << Q_FUNC_INFO;
+
+    if (sliceIndex < 0 || sliceIndex >= rgAngleStrengths().last().count()) {
+        qWarning() << "Invalid sliceIndex" << sliceIndex;
+        return;
+    }
+    auto& currentAngleStrengths = rgAngleStrengths().last();
+    if (qIsNaN(currentAngleStrengths[sliceIndex]) || pulseInfo.snr > currentAngleStrengths[sliceIndex]) {
+        // We have a new pulse which is greater than the current max for this slice
+        // Update the slice and recalculate the ratios
+
+        qCDebug(CustomPluginLog) << "New max for slice" << sliceIndex << "snr" << pulseInfo.snr << " - " << Q_FUNC_INFO;
+        currentAngleStrengths[sliceIndex] = pulseInfo.snr;
+
+        double maxOverallStrength = 0;
+        for (int i=0; i<currentAngleStrengths.count(); i++) {
+            if (currentAngleStrengths[i] > maxOverallStrength) {
+                maxOverallStrength = currentAngleStrengths[i];
+            }
+        }
+
+        // Recalc ratios based on new info
+        auto& currentAngleRatios = rgAngleRatios().last();
+        for (int i=0; i<currentAngleStrengths.count(); i++) {
+            double angleStrength = currentAngleStrengths[i];
+            if (!qIsNaN(angleStrength)) {
+                currentAngleRatios[i] = currentAngleStrengths[i] / maxOverallStrength;
+                qCDebug(CustomPluginLog) << "New angle ratio for slice" << i << "ratio" << currentAngleRatios[i] << "strength" << angleStrength << "maxOverallStrength" << maxOverallStrength << " - " << Q_FUNC_INFO;
+            }
+        }
+    
+        emit angleRatiosChanged();
+    }
+}
+
 void CustomPlugin::autoDetection()
 {
     qCDebug(CustomPluginLog) << Q_FUNC_INFO;
@@ -251,10 +308,11 @@ void CustomPlugin::autoDetection()
     auto stateMachine = new CustomStateMachine("Auto Detection", this);
 
     auto announceAutoStartState = new SayState("AnnounceAuto", stateMachine, "Starting auto detection");
-    auto startDetectionState    = new StartDetectionState(stateMachine);
     auto takeoffState           = new TakeoffState(stateMachine, _customSettings->takeoffAltitude()->rawValue().toDouble());
     auto eventModeRTLState      = new FunctionState("eventModeRTLState", stateMachine, [stateMachine] () { stateMachine->setEventMode(CustomStateMachine::CancelOnFlightModeChange | CustomStateMachine::RTLOnError); });
-    auto rotateState            = new RotateAndCaptureState(stateMachine);
+    auto rotateCommandState     = new RotateMavlinkCommandState(stateMachine, 0);
+    auto startDetectionState    = new StartDetectionState(stateMachine);
+    auto rotateAndCaptureState  = new FullRotateAndCaptureState(stateMachine);
     auto stopDetectionState     = new StopDetectionState(stateMachine);
     auto announceAutoEndState   = new SayState("AnnounceAutoEnd", stateMachine, "Auto detection complete. Returning");
     auto eventModeNoneState     = new FunctionState("eventModeNoneState", stateMachine, [stateMachine] () { stateMachine->setEventMode(0); });
@@ -262,11 +320,12 @@ void CustomPlugin::autoDetection()
     auto finalState             = new QFinalState(stateMachine);
 
     // Transitions
-    announceAutoStartState->addTransition   (announceAutoStartState,    &SayState::functionCompleted,       startDetectionState);
-    startDetectionState->addTransition      (startDetectionState,       &CustomState::finished,             takeoffState);
+    announceAutoStartState->addTransition   (announceAutoStartState,    &SayState::functionCompleted,       takeoffState);
     takeoffState->addTransition             (takeoffState,              &TakeoffState::takeoffComplete,     eventModeRTLState);
-    eventModeRTLState->addTransition        (eventModeRTLState,         &FunctionState::functionCompleted,  rotateState);
-    rotateState->addTransition              (rotateState,               &QState::finished,                  eventModeNoneState);
+    eventModeRTLState->addTransition        (eventModeRTLState,         &FunctionState::functionCompleted,  rotateCommandState);
+    rotateCommandState->addTransition       (rotateCommandState,        &RotateMavlinkCommandState::success,startDetectionState);
+    startDetectionState->addTransition      (startDetectionState,       &CustomState::finished,             rotateAndCaptureState);
+    rotateAndCaptureState->addTransition    (rotateAndCaptureState,     &QState::finished,                  eventModeNoneState);
     eventModeNoneState->addTransition       (eventModeNoneState,        &FunctionState::functionCompleted,  stopDetectionState);
     stopDetectionState->addTransition       (stopDetectionState,        &CustomState::finished,             announceAutoEndState);
     announceAutoEndState->addTransition     (announceAutoEndState,      &SayState::functionCompleted,       rtlState);
@@ -282,12 +341,36 @@ void CustomPlugin::startRotation(void)
 
     auto stateMachine = new CustomStateMachine("Start Rotation", this);
 
-    auto rotateState    = new RotateAndCaptureState(stateMachine);
-    auto finalState     = new QFinalState(stateMachine);
+    // States
 
-    rotateState->addTransition(rotateState, &CustomState::finished, finalState);
+    bool needStartDetection = _controllerStatus != ControllerStatusDetecting;
 
-    stateMachine->setInitialState(rotateState);
+    StartDetectionState* startDetectionState = nullptr;
+    StopDetectionState* stopDetectionState = nullptr;
+    if (needStartDetection) {
+        startDetectionState = new StartDetectionState(stateMachine);
+        stopDetectionState = new StopDetectionState(stateMachine);
+    }
+    auto finalState = new QFinalState(stateMachine);
+
+    CustomState* rotateState = nullptr;
+    if (_customSettings->rotationType()->rawValue().toInt() == 1) {
+        rotateState = new FullRotateAndCaptureState(stateMachine);
+    } else {
+        rotateState = new SmartRotateAndCaptureState(stateMachine);
+    }
+
+    // Transitions
+    if (needStartDetection) {
+        startDetectionState->addTransition(startDetectionState, &CustomState::finished, rotateState);
+        rotateState->addTransition(rotateState, &QState::finished, stopDetectionState);
+        stopDetectionState->addTransition(stopDetectionState, &CustomState::finished, finalState);
+    } else {
+        rotateState->addTransition(rotateState, &CustomState::finished, finalState);
+    }
+
+    stateMachine->setInitialState(startDetectionState ? startDetectionState : rotateState);
+
     stateMachine->start();
 }
 

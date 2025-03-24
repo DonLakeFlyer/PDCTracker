@@ -67,6 +67,8 @@ qt_add_library(CustomPlugin STATIC
     src/PulseMapItem.h
     src/CustomLoggingCategory.cc
     src/CustomLoggingCategory.h
+    src/StateMachine/CaptureAtSliceState.cc
+    src/StateMachine/CaptureAtSliceState.h
     src/StateMachine/CustomState.cc
     src/StateMachine/CustomState.h
     src/StateMachine/CustomStateMachine.cc
@@ -76,11 +78,17 @@ qt_add_library(CustomPlugin STATIC
     src/StateMachine/ErrorTransition.h
     src/StateMachine/FactWaitForValueTarget.cc
     src/StateMachine/FactWaitForValueTarget.h
+    src/StateMachine/SliceSequenceCaptureState.cc
+    src/StateMachine/SliceSequenceCaptureState.h
     src/StateMachine/FunctionState.cc
     src/StateMachine/FunctionState.h
     src/StateMachine/GuidedModeCancelledTransition.h
-    src/StateMachine/RotateAndCaptureState.cc
-    src/StateMachine/RotateAndCaptureState.h
+    src/StateMachine/FullRotateAndCaptureState.cc
+    src/StateMachine/FullRotateAndCaptureState.h
+    src/StateMachine/RotateAndCaptureStateBase.cc
+    src/StateMachine/RotateAndCaptureStateBase.h
+    src/StateMachine/RotateMavlinkCommandState.cc
+    src/StateMachine/RotateMavlinkCommandState.h
     src/StateMachine/SetFlightModeState.cc
     src/StateMachine/SetFlightModeState.h
     src/StateMachine/SayState.h
@@ -90,6 +98,8 @@ qt_add_library(CustomPlugin STATIC
     src/StateMachine/SendTagsState.h
     src/StateMachine/SendTunnelCommandState.cc
     src/StateMachine/SendTunnelCommandState.h
+    src/StateMachine/SmartRotateAndCaptureState.cc
+    src/StateMachine/SmartRotateAndCaptureState.h
     src/StateMachine/StartDetectionState.cc
     src/StateMachine/StartDetectionState.h
     src/StateMachine/StopDetectionState.cc

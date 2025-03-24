@@ -238,7 +238,13 @@ Item {
                     fact:               _customSettings.takeoffAltitude
                 }
 
-                LabelledFactTextField {
+                LabelledFactComboBox {
+                    Layout.fillWidth:   true
+                    label:              fact.shortDescription
+                    fact:               _customSettings.rotationType
+                }
+
+                LabelledFactComboBox {
                     Layout.fillWidth:   true
                     label:              fact.shortDescription
                     fact:               _customSettings.divisions
