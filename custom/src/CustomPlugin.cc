@@ -594,13 +594,3 @@ bool CustomPlugin::_validateAtLeastOneTagSelected()
 
     return false;
 }
-
-QString CustomPlugin::brandImageIndoor(void) const
-{
-    return QStringLiteral("/res/pdc-logo.png");
-}
-
-QString CustomPlugin::brandImageOutdoor(void) const
-{
-    return QStringLiteral("/res/pdc-logo.png");
-}
