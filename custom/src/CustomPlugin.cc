@@ -544,13 +544,6 @@ void CustomPlugin::clearMap()
     emit maxSNRChanged(_maxSNR);
 }
 
-void CustomPlugin::_stopDetectionOnDisarmed(bool armed)
-{
-    if (!armed && _controllerStatus == ControllerStatusDetecting) {
-        stopDetection();
-    }
-}
-
 QString CustomPlugin::brandImageIndoor(void) const
 {
     return QStringLiteral("/res/pdc-logo.png");
@@ -559,6 +552,13 @@ QString CustomPlugin::brandImageIndoor(void) const
 QString CustomPlugin::brandImageOutdoor(void) const
 {
     return QStringLiteral("/res/pdc-logo.png");
+}
+
+void CustomPlugin::_stopDetectionOnDisarmed(bool armed)
+{
+    if (!armed && _controllerStatus == ControllerStatusDetecting) {
+        stopDetection();
+    }
 }
 
 bool CustomPlugin::_validateAtLeastOneTagSelected()
