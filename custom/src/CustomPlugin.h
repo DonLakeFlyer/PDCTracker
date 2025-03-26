@@ -59,6 +59,7 @@ public:
     Q_PROPERTY(TagDatabase*         tagDatabase             READ    tagDatabase                 CONSTANT)
     Q_PROPERTY(double               maxSNR                  MEMBER  _maxSNR                     NOTIFY maxSNRChanged)
     Q_PROPERTY(double               minSNR                  MEMBER  _minSNR                     NOTIFY minSNRChanged)
+    Q_PROPERTY(bool                 activeRotation          MEMBER  _activeRotation             NOTIFY activeRotationChanged)
 
     // This custom version of the normal showAdvancedUI bool is used to help mark code changes in upstream QGC
     Q_PROPERTY(bool                 customShowAdvancedUI    MEMBER  _showAdvancedUI             NOTIFY customShowAdvancedUIChanged)
@@ -66,12 +67,14 @@ public:
     CustomSettings*     customSettings  () { return _customSettings; }
     DetectorList *      detectorList() { return DetectorList::instance(); }
     QString             holdFlightMode();
+    int                 maxWaitMSecsForKGroup();
 
     QList<QList<double>>&   rgAngleStrengths() { return _rgAngleStrengths; }
     QList<QList<double>>&   rgAngleRatios() { return _rgAngleRatios; }
     QList<double>&          rgCalcedBearings() { return _rgCalcedBearings; }
     CSVLogManager&          csvLogManager() { return _csvLogManager; }
-    void                    setActiveRotation(bool active) { _activeRotation = active; }
+    void                    rotationIsStarting();
+    void                    rotationIsEnding();
 
     void signalAngleRatiosChanged() { emit angleRatiosChanged(); }
     void signalCalcedBearingsChanged() { emit calcedBearingsChanged(); }
@@ -112,6 +115,8 @@ signals:
     void _startDetectionFailed          (void);
     void _detectionStopped              (void);
     void _stopDetectionFailed           (void);
+    void activeRotationChanged          (bool activeRotation);
+    void detectorHeartbeatReceived      (int oneBasedRateIndex);
     void customShowAdvancedUIChanged    (bool showAdvancedUI);
 
 private slots:
@@ -154,6 +159,7 @@ private:
     bool    _pulseConfirmed             (void) { return _lastPulseInfo.confirmed_status; }
     bool    _useSNRForPulseStrength     (void) { return _customSettings->useSNRForPulseStrength()->rawValue().toBool(); }
     void    _captureScreen              (void);
+    void    _setActiveRotation          (bool active);
 
     QVariantList            _settingsPages;
     QVariantList            _instrumentPages;
