@@ -35,9 +35,9 @@
     "name":         "divisions",
     "shortDesc":    "Rotation Divisions",
     "type":         "Int32",
-    "enumStrings":  "8,16",
-    "enumValues":   "8,16",
-    "default":      8
+    "enumStrings":  "8,12,16",
+    "enumValues":   "8,12,16",
+    "default":      12
 },
 {
     "name":         "gain",
