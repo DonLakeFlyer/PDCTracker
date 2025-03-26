@@ -117,6 +117,7 @@ signals:
     void _stopDetectionFailed           (void);
     void activeRotationChanged          (bool activeRotation);
     void detectorHeartbeatReceived      (int oneBasedRateIndex);
+    void customShowAdvancedUIChanged    (bool showAdvancedUI);
 
 private slots:
     void _controllerHeartbeatFailed(void);
