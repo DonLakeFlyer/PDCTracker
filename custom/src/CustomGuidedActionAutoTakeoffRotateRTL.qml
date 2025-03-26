@@ -9,12 +9,13 @@
 
 import QGroundControl               1.0
 import QGroundControl.FlightDisplay 1.0
+import QGroundControl.Vehicle       1.0
 
 GuidedToolStripAction {
     text:       customController.autoDetectionTitle
     iconSource: "/res/takeoff.svg"
     visible:    true
-    enabled:    activeVehicle && !activeVehicle.flying
+    enabled:    activeVehicle && activeVehicle.checkListState === Vehicle.CheckListPassed && !activeVehicle.flying
     actionID:   customController.actionAutoDetection
 
     property var customController: _guidedController._customController

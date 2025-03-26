@@ -494,10 +494,20 @@ int CustomPlugin::_rawPulseToPct(double rawPulse)
 
 bool CustomPlugin::adjustSettingMetaData(const QString& settingsGroup, FactMetaData& metaData)
 {
-    if (settingsGroup == AppSettings::settingsGroup && metaData.name() == AppSettings::batteryPercentRemainingAnnounceName) {
-        metaData.setRawDefaultValue(20);
-    } else if (settingsGroup == FlyViewSettings::settingsGroup && metaData.name() == FlyViewSettings::showSimpleCameraControlName) {
-        metaData.setRawDefaultValue(false);
+    if (settingsGroup == AppSettings::settingsGroup) {
+        if (metaData.name() == AppSettings::batteryPercentRemainingAnnounceName) {
+            metaData.setRawDefaultValue(20);
+        }
+        if (metaData.name() == AppSettings::useChecklistName) {
+            metaData.setRawDefaultValue(true);
+        }
+        if (metaData.name() == AppSettings::enforceChecklistName) {
+            metaData.setRawDefaultValue(true);
+        }
+    } else if (settingsGroup == FlyViewSettings::settingsGroup) {
+        if (metaData.name() == FlyViewSettings::showSimpleCameraControlName) {
+            metaData.setRawDefaultValue(false);
+        }
     }
 
 #ifdef TAG_TRACKER_HERELINK_BUILD

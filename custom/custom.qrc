@@ -17,6 +17,9 @@
         <file alias="QGroundControl/FlightDisplay/FlyViewToolStrip.qml">src/ResourceOverrides/FlightDisplay/FlyViewToolStrip.qml</file>
         <file alias="QGroundControl/FlightDisplay/CustomGuidedActionsController.qml">src/ResourceOverrides/FlightDisplay/CustomGuidedActionsController.qml</file>
     </qresource>
+    <qresource prefix="/checklists">
+        <file alias="MultiRotorChecklist.qml">src/ResourceOverrides/FlightDisplay/MultiRotorChecklist.qml</file>
+    </qresource>
     <qresource prefix="/res">
         <file alias="TagInfo.txt">TagInfo.txt</file>
         <file alias="pdc-logo.png">resources/pdc-logo.png</file>

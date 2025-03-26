@@ -15,7 +15,6 @@
 	</qresource>
 	<qresource prefix="/checklists">
 		<file alias="DefaultChecklist.qml">../src/FlightDisplay/DefaultChecklist.qml</file>
-		<file alias="MultiRotorChecklist.qml">../src/FlightDisplay/MultiRotorChecklist.qml</file>
 		<file alias="FixedWingChecklist.qml">../src/FlightDisplay/FixedWingChecklist.qml</file>
 		<file alias="VTOLChecklist.qml">../src/FlightDisplay/VTOLChecklist.qml</file>
 		<file alias="RoverChecklist.qml">../src/FlightDisplay/RoverChecklist.qml</file>

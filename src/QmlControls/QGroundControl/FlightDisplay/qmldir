@@ -39,6 +39,7 @@ ObstacleDistanceOverlayMap      1.0 ObstacleDistanceOverlayMap.qml
 ObstacleDistanceOverlayVideo    1.0 ObstacleDistanceOverlayVideo.qml
 OnScreenGimbalController        1.0 OnScreenGimbalController.qml
 PreFlightBatteryCheck           1.0 PreFlightBatteryCheck.qml
+PreFlightCheckListShowAction    1.0 PreFlightCheckListShowAction.qml
 PreFlightGPSCheck               1.0 PreFlightGPSCheck.qml
 PreFlightRCCheck                1.0 PreFlightRCCheck.qml
 PreFlightSensorsHealthCheck     1.0 PreFlightSensorsHealthCheck.qml

@@ -30,8 +30,6 @@ ToolStrip {
         property var activeVehicle:     QGroundControl.multiVehicleManager.activeVehicle
         property bool controllerIdle:   QGroundControl.corePlugin.controllerStatus == CustomPlugin.ControllerStatusIdle || QGroundControl.corePlugin.controllerStatus == CustomPlugin.ControllerStatusHasLogs
 
-        onDisplayPreFlightChecklist: _root.displayPreFlightChecklist()
-
         model: [
             ToolStripAction {
                 text:           qsTr("Plan")
@@ -53,13 +51,12 @@ ToolStrip {
     ToolStripActionList {
         id: autoActionList
 
-        signal displayPreFlightChecklist
-
         property var customController:  _guidedController._customController
         property var activeVehicle:     QGroundControl.multiVehicleManager.activeVehicle
         property bool controllerIdle:   QGroundControl.corePlugin.controllerStatus == CustomPlugin.ControllerStatusIdle || QGroundControl.corePlugin.controllerStatus == CustomPlugin.ControllerStatusHasLogs
 
         model: [
+            PreFlightCheckListShowAction { onTriggered: displayPreFlightChecklist() },
             CustomGuidedActionAutoTakeoffRotateRTL { },
             GuidedActionRTL { },
             GuidedActionPause { },
